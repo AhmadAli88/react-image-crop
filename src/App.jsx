@@ -1,13 +1,26 @@
-import './App.css';
+import { useState } from 'react';
 import CropDemo from './components/ImageCropper';
 
+
 function App() {
-  const imageUrl = 'https://images.unsplash.com/photo-1439871846984-851e435a999b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHx0b3BpYy1mZWVkfDN8NnNNVmpUTFNrZVF8fGVufDB8fHx8fA%3D%3D';
+  const [imageSrc, setImageSrc] = useState(null);
+
+  // This function handles the image file selection
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImageSrc(reader.result);  // Set base64 encoded image to state
+    };
+    if (file) {
+      reader.readAsDataURL(file);  // Read the file as data URL
+    }
+  };
 
   return (
     <div>
-      <h1>Image Crop Demo</h1>
-      <CropDemo src={imageUrl} />
+      <input type="file" onChange={handleImageUpload} />
+      {imageSrc && <CropDemo src={imageSrc} />}
     </div>
   );
 }
